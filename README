@@ -1,0 +1,12 @@
+Any Mode
+
+<C-X><C-U> for autocomplete
+
+Normal Mode
+
+o - Insert Mode at new next line.
+A - Insert Mode at last char of the line.
+I - Insert Mode at first char of the line.
+yy - Copy text.
+dd - delete text.
+
