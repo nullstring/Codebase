@@ -57,7 +57,7 @@ const long double pi = 3.14159265358979323846;
 
 
 int main(){
-
+    freopen("a.txt","r",stdin);
     int t;
     scanf("%d",&t);
 
