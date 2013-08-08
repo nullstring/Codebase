@@ -55,12 +55,61 @@ const long double pi = 3.14159265358979323846;
 #define present(c,x) ((c).find(x) != (c).end())  // for set/map etc 
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
+int a[2005];
+int b[2005];
+int dp[2005][2005];
+int lcs(int an, int bn) {
+    //cout << an << " " << bn << endl;
+    memset(dp, 0, sizeof dp);
+    for(int i=1; i<=an; i++) {
+        for(int j=1; j<=bn; j++) {
+            int p = i-1, q = j-1;
+            if(a[p] == b[q]) dp[i][j] = dp[i-1][j-1] + 1;
+            else dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+        }
+    }
+    forn(i, bn+1) {
+        forn(j, an+1) {
+      //      cout << dp[j][i] << " ";
+        }
+      //  cout << endl;
+    }
+    return dp[an][bn];
+}
 
 int main(){
-    freopen("a.txt","r",stdin);
+
     int t;
     scanf("%d",&t);
 
-    
+    while(t--) {
+        int an, bn;
+        memset(a, 0, sizeof a);
+        int num, i=0;
+        do{
+            cin >> num;
+            a[i] = num;
+        //    cout << "i " << i << endl;
+            i++;
+        }while(num);
+        an = i-1;
+
+        int maxx = 0;
+        while(1) {
+            int first;
+            cin >> first;
+            if(first == 0) break;
+            b[0] = first;
+            i = 1;
+            do{
+                cin >> first;
+                b[i] = first;
+                i++;
+            }while(first);
+            bn = i-1;
+            maxx = max(maxx, lcs(an, bn));
+        }
+        cout << maxx << endl;
+    }
     return 0;
 }
