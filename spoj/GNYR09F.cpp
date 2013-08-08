@@ -58,10 +58,10 @@ const long double pi = 3.14159265358979323846;
 int dp[105][105][2];
 
 int count_n(int n, int k, int prev) {
-    if(n == 0 && k == 0) return 1;
-    if(k == 0) return 0;
-    if(n <= 0) return 0;
-    if(n == k+1) return 1;
+    if(k == 0 && n < 0) return 1;
+    if(n < 0) return 0;
+    if(k < 0) return 0;
+    //if(n == k+1) return 1;
     if(dp[n][k][prev] != -1) return dp[n][k][prev];
     int sum = 0;
 
@@ -93,7 +93,7 @@ int main(){
         memset(dp, -1, sizeof dp);
         int num, n, k;
         cin >> num >> n >> k;
-        cout << count_n(n-1, k, 1) + count_n(n-1, k, 0) << endl;
+        cout << count_n(n-2, k, 1) + count_n(n-2, k, 0) << endl;
         //forn(i, n+1) {
         //    forn(j, k+1) {
         //        cout << dp[i][j] << " ";
