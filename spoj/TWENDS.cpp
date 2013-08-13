@@ -55,47 +55,67 @@ const long double pi = 3.14159265358979323846;
 #define present(c,x) ((c).find(x) != (c).end())  // for set/map etc 
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
-int dp[1005][1005];
-bool dp_b[1005][1005];
+int dp[2005][2005];
 int main(){
-
+freopen("a.txt","r",stdin);
+int counter = 1;
     while(1) {
         int t;
         scanf("%d",&t);
 
         if(t == 0) break;
         memset(dp, 0, sizeof dp);
-        memset(dp_b, 0, sizeof dp_b);
         forn(i, t) {
             cin >> dp[i][i];
         }
+        forn(i, t-1) dp[i][i+1] = max(dp[i][i], dp[i+1][i+1]) - min(dp[i][i], dp[i+1][i+1]);
+        //forn(i, t) {
+            //forn(j, t) {
+                //cout << dp[i][j] << " ";
+            //}
+            //cout << endl;
+        //}
 
-        forn(i, t) {
-            forn(j, t) {
-                cout << dp[i][j] << " ";
-            }
-            cout << endl;
-        }
-
-        for(int len = 1; len < t; len++) {
+        for(int len = 2; len < t; len++) {
             for(int i=0; i+len<t; i++) {
-                int j = i+len;
-                if(dp[i][j-1] + dp[j][j]> dp[i-1][j] + dp[i][i]) {
-                    dp[i][j] = dp[i][j-1] + dp[j][j];
-                    dp_b[i][j] = true;
+                int j = i+len, op_left, op_right, maxxl = dp[i][i], maxxr = dp[j][j];
+                int greedl = 0, greedr = 0;
+                // Assuming take left ( ith )
+                op_left = i+1;
+                op_right = j;
+                if(dp[op_left][op_left] >= dp[op_right][op_right]) {
+                    greedl = dp[op_left][op_left];
+                    maxxl += dp[op_left+1][op_right];
                 } else {
-                    dp[i][j] = dp[i-1][j] + dp[i][i];
+                    greedl = dp[op_right][op_right];
+                    maxxl += dp[op_left][op_right-1];
                 }
-            }
+
+                // Assuming take right ( jth )
+                op_left = i;
+                op_right = j-1;
+                if(dp[op_left][op_left] >= dp[op_right][op_right]) {
+                    greedr = dp[op_left][op_left];
+                    maxxr += dp[op_left+1][op_right];
+                } else {
+                    greedr = dp[op_right][op_right];
+                    maxxr += dp[op_left][op_right-1];
+                }
+                if(maxxl >= maxxr) {
+                    dp[i][j] = maxxl - greedl;
+                } else {
+                    dp[i][j] = maxxr - greedr;
+                }
+           }
         }
 
-        forn(i, t) {
-            forn(j, t) {
-                cout << dp[i][j] << " ";
-            }
-            cout << endl;
-        }
+        //forn(i, t) {
+            //forn(j, t) {
+                //cout << dp[i][j] << " ";
+            //}
+            //cout << endl;
+        //}
+        cout << "In game "<< counter++<<", the greedy strategy might lose by as many as " << dp[0][t-1] << " points." << endl;
     }
-    
     return 0;
 }

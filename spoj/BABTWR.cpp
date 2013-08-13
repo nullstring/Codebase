@@ -55,53 +55,59 @@ const long double pi = 3.14159265358979323846;
 #define present(c,x) ((c).find(x) != (c).end())  // for set/map etc 
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
-int dp[105][105][2];
+struct node {
+    int a;
+    int b;
+    int c;
 
-int count_n(int n, int k, int prev) {
-    if(k == 0 && n < 0) return 1;
-    if(n < 0) return 0;
-    if(k < 0) return 0;
-    //if(n == k+1) return 1;
-    if(dp[n][k][prev] != -1) return dp[n][k][prev];
-    int sum = 0;
-
-    if(prev) {
-        sum += count_n(n-1, k-1, 1);
-        sum += count_n(n-1, k, 0);
-    } else {
-        sum += count_n(n-1, k, 1);
-        sum += count_n(n-1, k, 0);
-    }
-
-    //forn(i, n) {
-    //    forn(j, k+1) {
-    //        sum += count(i, j)*count(n-i-1, k-j);
-    //    }
-    //}
-    //cout << n << " " << k << " " << dp[n][k] << endl;
-    dp[n][k][prev] = sum;
-    return sum;
+};
+int dp[105];
+bool cmp (const node& lhs, const node& rhs) {
+    if(lhs.a != rhs.a) return lhs.a>rhs.a;
+    else if(lhs.b != rhs.b) return lhs.b>rhs.b;
+    else return lhs.c>rhs.c;
 }
-
+struct node in[100];
 int main(){
-
-    //freopen("b.txt","r",stdin);
-    int t;
-    scanf("%d",&t);
-
-    forn(i, t) {
-        memset(dp, -1, sizeof dp);
-        int num, n, k;
-        cin >> num >> n >> k;
-        cout << i+1 << " " << count_n(n-2, k, 1) + count_n(n-2, k, 0) << endl;
-        //forn(i, n+1) {
-        //    forn(j, k+1) {
-        //        cout << dp[i][j] << " ";
-        //    }
-        //    cout << endl;
-        //}
-
+//freopen("b.txt","r",stdin);
+    while(1) {
+        int t;
+        scanf("%d",&t);
+        memset(in, 0, sizeof in);
+        memset(dp, 0, sizeof dp);
+        if(!t) break;
+        forn(i, t) {
+            int x[3];
+            cin >> x[0] >> x[1] >> x[2];
+            forn(j, 3) {
+                in[i*3+j].a = x[j];
+                in[i*3+j].b = x[(j+1)%3];
+                in[i*3+j].c = x[(j+2)%3];
+                if(in[i*3+j].a > in[i*3+j].b) swap(in[i*3+j].a, in[i*3+j].b);
+            }
+        }
+        int n = 3*t;
+        sort(in, in+n, cmp);
+        //forn(i, n)
+            //cout << in[i].a << " " << in[i].b << " " << in[i].c << endl;
+        //cout << endl;
+        forn(i, n) {
+            dp[i] = in[i].c;
+            int maxx = 0;
+            forn(j, i) {
+                if(in[i].a < in[j].a && in[i].b < in[j].b)
+                maxx = max(maxx, dp[j]); 
+            }
+            dp[i] += maxx;
+        }
+        
+        //forn(i, n) cout << dp[i] << endl;;
+        //cout << endl;
+        int maxx = 0;
+        forn(i, n) maxx = max(maxx, dp[i]);
+        cout << maxx << endl;
     }
+
     
     return 0;
 }

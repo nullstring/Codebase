@@ -55,53 +55,23 @@ const long double pi = 3.14159265358979323846;
 #define present(c,x) ((c).find(x) != (c).end())  // for set/map etc 
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
-int dp[105][105][2];
-
-int count_n(int n, int k, int prev) {
-    if(k == 0 && n < 0) return 1;
-    if(n < 0) return 0;
-    if(k < 0) return 0;
-    //if(n == k+1) return 1;
-    if(dp[n][k][prev] != -1) return dp[n][k][prev];
-    int sum = 0;
-
-    if(prev) {
-        sum += count_n(n-1, k-1, 1);
-        sum += count_n(n-1, k, 0);
-    } else {
-        sum += count_n(n-1, k, 1);
-        sum += count_n(n-1, k, 0);
-    }
-
-    //forn(i, n) {
-    //    forn(j, k+1) {
-    //        sum += count(i, j)*count(n-i-1, k-j);
-    //    }
-    //}
-    //cout << n << " " << k << " " << dp[n][k] << endl;
-    dp[n][k][prev] = sum;
-    return sum;
-}
 
 int main(){
 
-    //freopen("b.txt","r",stdin);
-    int t;
-    scanf("%d",&t);
+    int x, y;
+    scanf("%d %d",&x, &y);
 
-    forn(i, t) {
-        memset(dp, -1, sizeof dp);
-        int num, n, k;
-        cin >> num >> n >> k;
-        cout << i+1 << " " << count_n(n-2, k, 1) + count_n(n-2, k, 0) << endl;
-        //forn(i, n+1) {
-        //    forn(j, k+1) {
-        //        cout << dp[i][j] << " ";
-        //    }
-        //    cout << endl;
-        //}
-
+    int res = abs(x) + abs(y);
+    if( x< 0 && y < 0) {
+        cout << -res << " " << 0 << " " << 0 << " " << -res << endl;
+    } else if ( x<0 && y >0) {
+        cout << -res << " " << 0 << " " << 0 << " " << res << endl;
+    } else if (x>0 && y>0) {
+        cout << 0 << " " <<res << " "<< res << " " << 0 << endl;
+    } else if (x>0 && y<0) {
+        cout << 0 << " " <<-res << " "<< res << " " << 0 << endl;
     }
+
     
     return 0;
 }

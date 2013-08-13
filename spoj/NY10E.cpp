@@ -55,53 +55,40 @@ const long double pi = 3.14159265358979323846;
 #define present(c,x) ((c).find(x) != (c).end())  // for set/map etc 
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
-int dp[105][105][2];
 
-int count_n(int n, int k, int prev) {
-    if(k == 0 && n < 0) return 1;
-    if(n < 0) return 0;
-    if(k < 0) return 0;
-    //if(n == k+1) return 1;
-    if(dp[n][k][prev] != -1) return dp[n][k][prev];
-    int sum = 0;
-
-    if(prev) {
-        sum += count_n(n-1, k-1, 1);
-        sum += count_n(n-1, k, 0);
-    } else {
-        sum += count_n(n-1, k, 1);
-        sum += count_n(n-1, k, 0);
+long long int dp[70][10];
+int main(){
+//freopen("a.txt","r",stdin);
+    int n = 65;
+    memset(dp, 0, sizeof dp);
+        forn(i, 10) dp[1][i] = i+1;
+        for(int i = 2; i<= n; i++) {
+            forn(j, 10) {
+                int total = 0;
+                //forn(k, j+1) {
+                    //total += dp[i-1][k]; 
+                //}
+                if(j-1>=0)
+                dp[i][j] += dp[i][j-1];
+                dp[i][j] += dp[i-1][j];
+            }
     }
 
-    //forn(i, n) {
-    //    forn(j, k+1) {
-    //        sum += count(i, j)*count(n-i-1, k-j);
-    //    }
-    //}
-    //cout << n << " " << k << " " << dp[n][k] << endl;
-    dp[n][k][prev] = sum;
-    return sum;
-}
-
-int main(){
-
-    //freopen("b.txt","r",stdin);
     int t;
     scanf("%d",&t);
-
-    forn(i, t) {
-        memset(dp, -1, sizeof dp);
-        int num, n, k;
-        cin >> num >> n >> k;
-        cout << i+1 << " " << count_n(n-2, k, 1) + count_n(n-2, k, 0) << endl;
-        //forn(i, n+1) {
-        //    forn(j, k+1) {
-        //        cout << dp[i][j] << " ";
-        //    }
-        //    cout << endl;
+    forn(p, t){
+        int tmp, N;
+        cin >> tmp >> N;
+        
+                //forn(i, n+1) {
+            //forn(j, 10)
+                //cout << dp[i][j] << endl;
+            //cout << endl;
         //}
+        cout << p+1 << " " << dp[N][9] << endl;
 
     }
+
     
     return 0;
 }
