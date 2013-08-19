@@ -67,7 +67,12 @@ int main(){
         int n, k;
         scanf("%d %d",&n, &k);
         if(n == 0 && k == 0) return 0;
-        cout << n << " " << k << " " << jose(n, k)+1 << endl;;
+        int old = 1;
+        for(int i = 2;i< n+1;i++) {
+            old = (old+k-1)%i+1; 
+//            cout << i << " " << dp[i] << endl;
+        }
+        cout << n << " " << k << " " << old << endl;;
     }
         
     return 0;

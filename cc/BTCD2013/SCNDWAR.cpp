@@ -82,7 +82,9 @@ int main(){
             }
         }
 
-        int base = (int)ceil(log2(m.size()+2));
+        int base;
+        if(m.size() == 1) base = 2;
+        else base = m.size();
         //cout << "base " << base << " " << m.size() << endl;
         ll ans = 0;
         //cout << m['z'] << " " << m['i'] << " " << m['g']<< endl;
