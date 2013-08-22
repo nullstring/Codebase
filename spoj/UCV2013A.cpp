@@ -55,17 +55,56 @@ const long double pi = 3.14159265358979323846;
 #define present(c,x) ((c).find(x) != (c).end())  // for set/map etc 
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
-int arr[
+ll m = 1000000007;
+ll pow(ll a, ll b, ll MOD) {
+ll x = 1, y = a;
+    while(b > 0) {
+        if(b%2 == 1) {
+            x=(x*y);
+            if(x>MOD) x%=MOD;
+        }
+        y = (y*y);
+        if(y>MOD) y%=MOD;
+        b /= 2;
+    }
+    return x;
+}
+
+ll pow_good(ll a, ll b, ll mod) {
+    ll x = 1;
+    while(b) {
+        if(b&1) {
+            x = x*a;
+            x %= mod;
+        }
+        b >>= 1;
+        a *= a;
+        a %= mod;
+    }
+}
+
+
+ll modInverse(ll a, ll m) {
+    return pow(a,m-2,m);
+}
+
+
 int main(){
 //freopen("a.txt","r",stdin);
     //int t;
     //scanf("%d",&t);
-    int n, q;
-    cin >> n >> q;
-    forn(i, n) {
-    
-    }
 
+    while(1) {
+        ll x, n;
+        cin >> x >> n;
+        if(!x && !n) break;
+        ll p = pow(x, n, m) - 1;
+        p = x*p;
+        p %= m;
+        p = p*modInverse(x-1, m);
+        p %= m;
+        cout << p << endl;
+    }
     
     return 0;
 }
