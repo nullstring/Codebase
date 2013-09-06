@@ -25,13 +25,14 @@ from preprocess import preprocess
 # Sizeof object
 import sys
 import os
+import pickle
 
 class indexer:
     # load the index from a saved file
     def loadFromFile (self, indexFile):
         # TODO assert that trie should be empty right now,
         # otherwise you'll loose the index
-        fp = open(indexFile)
+        fp = open(indexFile, 'r')
         self.index = trie.load (fp)
         self.modified = False
 
@@ -58,30 +59,58 @@ class indexer:
         if self.modified:
             fp = open (fileName, 'w')
             trie.save (fp, self.index)
+            fp.close ()
 
 #print triefind.match ("hello world", trieobj)
 #print trieobj.has_key ("hje")
 
+indexFileName = "version_index_1.ind"
+docDictionary = "doc_dictionary.dict"
+
+# called only once
 def indexCacm (dataSet):
     index = indexer ()
     wordToDoc, docToWord = preprocess(dataSet)
     print "Start Indexing"
+
+    # Index creation for "term -> posting list"
     for word in wordToDoc:
         #print word
         index.index[word] = []
         for id in wordToDoc[word]:
             index.index[word].append((id,wordToDoc[word][id]))
 
+    # Number of terms in document
+    docSizeDic = {}
+    totalSize = 0
+    for doc in docToWord:
+	total = 0
+	for term in docToWord[doc]:
+	    total += docToWord[doc][term]
+	docSizeDic[doc] = total
+	totalSize += total
+
     print "Done Indexing"
     #for id,fq in index.index["use"]:
     #    print id + "," + str(fq)
 
-    fileName = "version_index_1.ind"
-    index.saveIndex (fileName)
-    print os.path.getsize (fileName)
-    return index, wordToDoc, docToWord
-    #print "size of index: " + str(sys.getsizeof (index)) + "Bytes"
+    index.saveIndex (indexFileName)
+    print os.path.getsize (indexFileName)
 
+    fp = open (docDictionary, 'wb')
+    pickle.dump ((docSizeDic, totalSize/len(docSizeDic)), fp)
+    return index, docSizeDic, totalSize/len(docSizeDic)
+
+# Load previous index
+def loadIndexFromDisk ():
+    fp = open (indexFileName, 'r')
+    index = trie.load (fp)
+    fp.close()
+
+    fp = open(docDictionary, 'rb')
+    docDict = pickle.load (fp)
+    return index, docDict[0], docDict[1]
 
 #if __name__ == '__main__':
-#    main()
+#    indexCacm ("cacm.all")
+

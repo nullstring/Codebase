@@ -2,7 +2,7 @@ import math
 import operator
 from stemming.porter2 import stem
 import nltk
-from indexer import indexer, indexCacm
+from indexer import indexer, indexCacm, loadIndexFromDisk
 from nltk.corpus import stopwords
 from nltk import word_tokenize, wordpunct_tokenize
 def bm25(idf, tf, fl, avgfl, B, K1):
@@ -23,7 +23,7 @@ def idf_good(num_docs, term_num_docs):
 def tf_good(f, max_f_per_doc):
     return (0.5 + ((0.5*f)/max_f_per_doc))
 
-def query(q, index, wordToDoc, docToWord):
+def query(q, index, docSizeDic, avgLen):
     d = {}
     word_list = word_tokenize(q)
     for word in word_list:
@@ -32,17 +32,24 @@ def query(q, index, wordToDoc, docToWord):
         if stemmed_word not in stopwords.words('english'):
             post_list = index.searchWord(stemmed_word)
             for docid, tf in post_list:
-		score = bm25(idf_bad(len(docToWord), len(wordToDoc[stemmed_word])), tf, 1, 1, 0.75, 1.5)
+		score = bm25(idf_bad(len(docSizeDic), len(post_list)), tf, docSizeDic[docid], avgLen, 0.75, 1.5)
                 d[docid] = d.get(docid, 0) + score
     sorted_d = sorted(d.iteritems(), key=operator.itemgetter(1))
+    sorted_d.reverse()
     return sorted_d
 
 
 cacmDataSet = "cacm.all"
 def main():
-    index, wordToDoc, docToWord = indexCacm (cacmDataSet)
-    d = query("What articles exist which deal with TSS (Time Sharing System), an operating system for IBM computers?", index, wordToDoc, docToWord)
-    for docid, score in d:
-        print str(docid)+" "+str(score)
+    index, docSizeDic, avgLen = indexCacm ("cacm.all")
+    while 1:
+    	q = raw_input('Enter a query: ')
+    	d = query(q, index, docSizeDic, avgLen)
+	if d != None:    	
+	    for docid, score in d:
+        	print str(docid)+" "+str(score)
+	else:
+            print "No Results";
+
 if __name__ == '__main__':
     main()
