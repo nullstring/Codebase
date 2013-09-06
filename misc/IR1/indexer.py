@@ -57,7 +57,7 @@ class indexer:
     # TODO there's some fuzziness in this work
     def saveIndex (self, fileName):
         if self.modified:
-            fp = open (fileName, 'w')
+            fp = open (fileName, 'wb')
             trie.save (fp, self.index)
             fp.close ()
 
@@ -97,20 +97,27 @@ def indexCacm (dataSet):
     index.saveIndex (indexFileName)
     print os.path.getsize (indexFileName)
 
+    #fp = open(indexFileName, 'wb')
+    #pickle.dump (index, fp)
+    #fp.close()
+	
     fp = open (docDictionary, 'wb')
     pickle.dump ((docSizeDic, totalSize/len(docSizeDic)), fp)
+    fp.close()
     return index, docSizeDic, totalSize/len(docSizeDic)
 
 # Load previous index
 def loadIndexFromDisk ():
-    fp = open (indexFileName, 'r')
+    fp = open (indexFileName,'rb')
     index = trie.load (fp)
+    #index = pickle.load(fp)
     fp.close()
 
     fp = open(docDictionary, 'rb')
     docDict = pickle.load (fp)
+    fp.close()
     return index, docDict[0], docDict[1]
 
-#if __name__ == '__main__':
-#    indexCacm ("cacm.all")
+if __name__ == '__main__':
+    indexCacm ("cacm.all")
 

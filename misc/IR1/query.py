@@ -45,8 +45,12 @@ def main():
     while 1:
     	q = raw_input('Enter a query: ')
     	d = query(q, index, docSizeDic, avgLen)
-	if d != None:    	
+	if d != None:
+            i=0    	
 	    for docid, score in d:
+		if i>20:
+			break
+		i+=1
         	print str(docid)+" "+str(score)
 	else:
             print "No Results";
