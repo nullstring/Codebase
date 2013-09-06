@@ -56,21 +56,22 @@ const long double pi = 3.14159265358979323846;
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
 map<pair<int, int>, int> m;
-int bnn(vector<int> &dp, int s, int t) {
-    if(dp.size() == 0) return 0;
+int arr[200];
+int bnn(int p, int q, int s, int t) {
+    if(q-p < 0) return 0;
     if(m.find(mp(s, t)) != m.end()) return m[mp(s, t)];
     //double mid = (s+t)/2.0;
     //int min_i = -1;
     int minn = INF;
     //cout << mid << endl;
-    forn(i, dp.size()){
+    for(int i=p; i<=q; i++) {
         //if(abs((double)dp[i]-mid) < minn) {
             //min_i = i;
             //minn = abs((double)dp[i]-mid);
             ////cout << "minn " << minn << endl;
         //}
-        vector<int> p1(dp.begin(), dp.begin()+i), p2(dp.begin()+i+1, dp.end());
-        minn = min(minn, t-s+bnn(p1, s, dp[i]-1) + bnn(p2, dp[i]+1, t)); 
+        //vector<int> p1(dp.begin(), dp.begin()+i), p2(dp.begin()+i+1, dp.end());
+        minn = min(minn, t-s+bnn(p, i-1, s, arr[i]-1) + bnn(i+1, q, arr[i]+1, t)); 
     }
     m[mp(s, t)] = minn;
     return minn;
@@ -80,17 +81,19 @@ int main(){
 //freopen("a.txt","r",stdin);
     int t;
     scanf("%d",&t);
-    while(t--) {
+    forn(k, t) {
         m.clear();
+        memset(arr, 0, sizeof arr);
         int n, z;
         cin >> n >> z;
-        vector<int> dp;
+        //vector<int> dp;
         forn(i, z) {
-            int tmp;
-            cin >> tmp;
-            dp.pb(tmp);
+            //int tmp;
+            //cin >> tmp;
+            //dp.pb(tmp);
+            cin >> arr[i];
         }
-        cout << bnn(dp, 1, n) << endl;
+        cout << bnn(0, z-1, 1, n) << endl;
     }
 
     
