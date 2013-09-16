@@ -55,73 +55,38 @@ const long double pi = 3.14159265358979323846;
 #define present(c,x) ((c).find(x) != (c).end())  // for set/map etc 
 #define cpresent(c,x) (find(all(c),x) != (c).end())  // for vector 
 
-ll gcd(ll a, ll b) {
-    while(a&&b) {
-        if(a>b) a %= b;
-        else b %= a;
-    }
-    return a+b;
-}
 
 int main(){
 //    freopen("a.txt","r",stdin);
     int t;
     scanf("%d",&t);
-
     while(t--) {
-        string s;
-        //double f;
-        cin >> s;
-        int i=0;
-        for(i=0;i< s.length();i++) if(s[i] == '.') break;
-        if(i == s.length()) {
-            cout << 1 << endl;
-            continue;
-        }
-        i++;
-        //cout << "{i " << i << endl;
-//        cout << "i " << i << endl;
-        int len = s.length()-i;
-        /*
-        bool done = false;
-        for(int j = i;j<s.length(); j++) {
-            ll x = pow(10, (len-j+i));
-            ll p = 0;
-            for(int k=j; k<s.length(); k++) {
-                p += s[k]-'0';
-                p *= 10;
-            }
-            p /= 10;
-  //          cout << x << " " << p << endl;
-            if(p == 0) {
-                ll res = pow(10, (j-i));
-                ll g = gcd(res, (ll)res*(atof(s.c_str())));
-                res = res/g;
-                cout << res << endl;
-               
-                //cout << pow(10, (j-i)) << endl;
-                done = true;
-                break;
-            } else if(x%p == 0) {
-                ll res = pow(10, (j-i))*x/(p);
-                ll g = gcd(res, (ll)res*(atof(s.c_str())));
-                res = res/g;
-                cout << res << endl;
-                done = true;
-                break;
-            }
-        }
-        */
-        ll x = 0;
-        for(int j=i; j<s.length(); j++) x = x*10 + (s[j]-'0');
-        //cout << "x " << x << endl;
-        ll res = pow(10, len);
-        ll g = gcd(res, x);
-        res = res/g;
-        cout << res << endl;
+        int n;
+        cin >> n;
 
-        
-   }
+        queue<int> qu;
+        ll total = 0;
+        int res = 0;
+        while(1) {
+            if(total < 47) {
+                if(n == 0) break;
+                int x;
+                cin >> x;
+                qu.push(x);
+                total += x;
+                n--;
+            }  else if(total > 47) {
+                total -= qu.front();
+                qu.pop();
+            } else {
+                res++;
+                total -= qu.front();
+                qu.pop();
+            }
+        }
+        cout << res << endl;
+    }
+
     
     return 0;
 }
